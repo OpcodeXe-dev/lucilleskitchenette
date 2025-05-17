@@ -1,11 +1,10 @@
 'use client';
 
+import { Suspense, useEffect, useState } from 'react';
 import Header from '@/app/comps/Header';
 import IsLoggedIn from '@/utils/IsloggedIn';
 import supabase from '@/utils/Supabase';
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react';
-
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface MenuItem {
     id: number;
@@ -20,33 +19,27 @@ interface CartItem extends MenuItem {
     quantity: number;
 }
 
-export default function Menu() {
+function MenuContent() {
     const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
     const [filteredItems, setFilteredItems] = useState<MenuItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [cart, setCart] = useState<CartItem[]>([]);
-
-    const searchParams = useSearchParams()
-    const router = useRouter()
- 
-    const search = searchParams.get('search')
-
     const [searchQuery, setSearchQuery] = useState('');
-
-
-    useEffect(() => {
-            if(search != null) {
-                setSearchQuery(search.toString()) 
-            }
-
-            if(searchQuery === '') {
-                router.push('/user/menu')
-            }
-    }, [ search, searchQuery])
-
-
     const [activeCategory, setActiveCategory] = useState<string | null>(null);
+    const router = useRouter();
+    const searchParams = useSearchParams();
+
+    // Fetch search query from URL
+    useEffect(() => {
+        const search = searchParams.get('search');
+        if (search) {
+            setSearchQuery(search);
+        } else {
+            setSearchQuery('');
+            router.push('/user/menu');
+        }
+    }, [searchParams, router]);
 
     // Fetch menu items
     useEffect(() => {
@@ -80,7 +73,6 @@ export default function Menu() {
         setFilteredItems(filtered);
     }, [searchQuery, menuItems]);
 
-    // Handle adding to cart
     const handleAddToCart = (item: MenuItem) => {
         setCart(prevCart => {
             const existingItem = prevCart.find(cartItem => cartItem.id === item.id);
@@ -96,10 +88,29 @@ export default function Menu() {
         });
     };
 
+    const handleRemoveFromCart = (itemId: number) => {
+        setCart(prevCart => {
+            const existingItem = prevCart.find(item => item.id === itemId);
+            if (existingItem && existingItem.quantity > 1) {
+                return prevCart.map(item =>
+                    item.id === itemId
+                        ? { ...item, quantity: item.quantity - 1 }
+                        : item
+                );
+            } else {
+                return prevCart.filter(item => item.id !== itemId);
+            }
+        });
+    };
+
+    const getItemQuantity = (itemId: number) => {
+        const cartItem = cart.find(item => item.id === itemId);
+        return cartItem ? cartItem.quantity : 0;
+    };
+
     const [user] = IsLoggedIn();
     const submitOrder = async () => {
         const userId = user?.id;
-
         if (!userId) return alert('User not found');
 
         const formattedOrders = cart.map(item => ({
@@ -124,38 +135,19 @@ export default function Menu() {
         }
     };
 
-    // Handle removing from cart
-    const handleRemoveFromCart = (itemId: number) => {
-        setCart(prevCart => {
-            const existingItem = prevCart.find(item => item.id === itemId);
-            if (existingItem && existingItem.quantity > 1) {
-                return prevCart.map(item =>
-                    item.id === itemId
-                        ? { ...item, quantity: item.quantity - 1 }
-                        : item
-                );
-            } else {
-                return prevCart.filter(item => item.id !== itemId);
-            }
-        });
-    };
-
-    // Get quantity for a specific item
-    const getItemQuantity = (itemId: number) => {
-        const cartItem = cart.find(item => item.id === itemId);
-        return cartItem ? cartItem.quantity : 0;
-    };
-
-    // Get all unique categories
     const categories = Array.from(new Set(menuItems.map(item => item.category)));
 
-    if (loading) return (
-        <div className="flex justify-center items-center h-screen">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-500"></div>
-        </div>
-    );
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-500"></div>
+            </div>
+        );
+    }
 
-    if (error) return <div className="text-red-500 p-4 text-center">Error: {error}</div>;
+    if (error) {
+        return <div className="text-red-500 p-4 text-center">Error: {error}</div>;
+    }
 
     return (
         <>
@@ -163,10 +155,13 @@ export default function Menu() {
             <div className="container mx-auto px-4 py-8 max-w-7xl">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                     <h1 className="text-3xl font-bold text-gray-800">Our Menu</h1>
-                    
+
                     <div className="relative w-full md:w-96">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 512 512" height="15px" width="15px" xmlns="http://www.w3.org/2000/svg"><path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path></svg>                        </div>
+                            <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 512 512" height="15px" width="15px" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path>
+                            </svg>
+                        </div>
                         <input
                             type="text"
                             placeholder="Search menu items..."
@@ -177,7 +172,6 @@ export default function Menu() {
                     </div>
                 </div>
 
-                {/* Category Filter */}
                 <div className="flex flex-wrap gap-2 mb-6">
                     <button
                         onClick={() => setActiveCategory(null)}
@@ -196,7 +190,6 @@ export default function Menu() {
                     ))}
                 </div>
 
-                {/* Menu Items Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {filteredItems
                         .filter(item => !activeCategory || item.category === activeCategory)
@@ -226,7 +219,7 @@ export default function Menu() {
                                             <h3 className="text-lg font-bold text-gray-800">{item.name}</h3>
                                             <span className="text-lg font-semibold text-yellow-600">₱{item.price.toFixed(2)}</span>
                                         </div>
-                                        <p className="text-gray-500 text-sm mb-4  break-all">{item.description}</p>
+                                        <p className="text-gray-500 text-sm mb-4 break-all">{item.description}</p>
 
                                         <div className="flex justify-between items-center">
                                             <div className="flex items-center space-x-2">
@@ -235,7 +228,7 @@ export default function Menu() {
                                                     className="p-2 bg-yellow-500 hover:bg-yellow-600 px-5 text-white rounded-md transition-colors cursor-pointer"
                                                     disabled={quantity === 0}
                                                 >
-                                                   -
+                                                    -
                                                 </button>
                                                 <span className="min-w-[40px] text-center bg-yellow-100 px-3 py-2 rounded-md">
                                                     {quantity}
@@ -244,17 +237,15 @@ export default function Menu() {
                                                     onClick={() => handleAddToCart(item)}
                                                     className="p-2 bg-yellow-500 hover:bg-yellow-600 px-5 text-white rounded-md transition-colors cursor-pointer"
                                                 >
-                                                   +
+                                                    +
                                                 </button>
                                             </div>
 
                                             <button
-                                            //only show if quantity is greater than 0
                                                 disabled={quantity === 0}
                                                 onClick={() => submitOrder()}
                                                 className="flex items-center gap-1 px-3 py-2 bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-medium rounded-md transition-colors cursor-pointer"
                                             >
-                                               
                                                 Order
                                             </button>
                                         </div>
@@ -264,7 +255,6 @@ export default function Menu() {
                         })}
                 </div>
 
-                {/* Cart Summary (fixed at bottom on mobile) */}
                 {cart.length > 0 && (
                     <div className="fixed bottom-0 left-0 right-0 md:static bg-white shadow-lg md:shadow-none border-t md:border-0 p-4 md:p-0 mt-8">
                         <div className="container mx-auto">
@@ -285,5 +275,14 @@ export default function Menu() {
                 )}
             </div>
         </>
+    );
+}
+
+// ✅ This is now wrapped correctly
+export default function MenuPage() {
+    return (
+        <Suspense fallback={<div>Loading menu...</div>}>
+            <MenuContent />
+        </Suspense>
     );
 }
