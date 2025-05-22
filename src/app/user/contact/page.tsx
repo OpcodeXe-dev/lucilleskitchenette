@@ -1,7 +1,6 @@
-// app/contact/page.tsx
+import Footer from "@/app/comps/Footer";
 import Header from "@/app/comps/Header";
 import Link from "next/link";
-// import { CiMap , FaPhone, FaEnvelope, FaFacebook } from "react-icons/all";
 
 export default function ContactPage() {
   return (
@@ -95,6 +94,8 @@ export default function ContactPage() {
         </div>
       </div>
     </div>
+    
+    <Footer />
     </>
   );
 }

@@ -56,7 +56,7 @@ const SignIn = () => {
             }
 
             toast.success('Sign in successful!');
-            router.push('/user/home'); 
+            router.push('/'); 
         } catch (error: any) {
             toast.error(error.message || 'Sign in failed. Please check your credentials.');
         } finally {
@@ -162,21 +162,13 @@ const SignIn = () => {
                     </div>
 
                     <div className='text-center mt-2'>
-                       
                         <Link 
                             href="/reset" 
                             className='text-blue-500 hover:text-blue-600 text-sm'
                         >
                             Forgot password?
                         </Link>
-                        
                     </div>
-                    <Link 
-                        href="/" 
-                        className="text-black-500 hover:text-gray-700 text-sm"
-                        >
-                        Back
-                    </Link>
                 </form>
             </div>
 

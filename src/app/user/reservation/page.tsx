@@ -7,17 +7,10 @@ import IsLoggedIn from '@/utils/IsloggedIn';
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Footer from '@/app/comps/Footer';
+import { useRouter } from 'next/navigation'
 
 
-
-const menuItems = [
-  { id: 1, name: "Filipino Spaghetti", price: 250 },
-  { id: 2, name: "Kare Kare", price: 350 },
-  { id: 3, name: "Chicken Wings", price: 280 },
-  { id: 4, name: "Beef Caldereta", price: 320 },
-  { id: 5, name: "Pork Adobo", price: 270 },
-  { id: 6, name: "Sinigang na Baboy", price: 300 },
-];
 
 interface MenuItem {
   id: number;
@@ -109,13 +102,27 @@ export default function Reservation() {
   };
   
 
+  const router = useRouter(); 
+
   const handleSubmit = async (e: React.FormEvent) => {
-    if (!user) return
+
+    e.preventDefault();
+
+
+    if (!user)  {
+  
+      toast.error('You must be logged in to make a reservation.');
+
+
+      setTimeout(() => {
+        router.push('/sign-in')
+      }, 2000);
+      return
+    }
 
 
 
     console.log(user)
-    e.preventDefault();
     formData.user_id = user?.id || ''
     console.log('Reservation submitted:', formData);
 
@@ -286,13 +293,16 @@ export default function Reservation() {
             <button
               type="submit"
               disabled={formData.items.length === 0}
-              className="px-8 py-3 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-600 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              className="px-8 py-3 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-600 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Confirm Reservation
             </button>
           </div>
         </form>
       </div>
+
+      
+      <Footer />
     </div>
   );
 }

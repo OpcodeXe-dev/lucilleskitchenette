@@ -7,7 +7,6 @@ import discImage from '../../../../assets/discover/disc.jpeg';
 import ownerImage from '../../../../assets/discover/owner.jpeg';
 import { useRouter } from 'next/navigation';
 
-//reviews imgs
 import review1 from '../../../../assets/reviews/1.jpg';
 import review2 from '../../../../assets/reviews/2.jpg';
 import review3 from '../../../../assets/reviews/3.jpg';
@@ -21,6 +20,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import Header from '@/app/comps/Header';
+import Footer from '@/app/comps/Footer';
 
 export default function About() {
 
@@ -30,23 +31,28 @@ export default function About() {
       <Head>
         <title>Our Story | Lucille's Kitchenette</title>
       </Head>
-      <header className='flex gap-5 justify-between items-center p-5'>
-        <div className='flex items-center gap-3 px-3 py-2 rounded-md bg-yellow-500 cursor-pointer'>
+
+
+<Header />
+      
+      <header className='flex gap-5 justify-between items-center px-[5%] pt-5'>
+        <div className='flex items-center gap-3 px-3 py-2 rounded-md bg-yellow-500 cursor-pointer'  onClick={() => router.back()}>
           <svg stroke="currentColor" fill="white" strokeWidth="0" viewBox="0 0 512 512" height="15px" width="15px" xmlns="http://www.w3.org/2000/svg"><path d="M401.4 224h-214l83-79.4c11.9-12.5 11.9-32.7 0-45.2s-31.2-12.5-43.2 0L89 233.4c-6 5.8-9 13.7-9 22.4v.4c0 8.7 3 16.6 9 22.4l138.1 134c12 12.5 31.3 12.5 43.2 0 11.9-12.5 11.9-32.7 0-45.2l-83-79.4h214c16.9 0 30.6-14.3 30.6-32 .1-18-13.6-32-30.5-32z"></path></svg>
 
           <div
-            onClick={() => router.back()}
             className='font-bold text-white'>
             Go back
           </div>
 
         </div>
 
-        <div className="flex items-center gap-5">
+        
+
+        {/* <div className="flex items-center gap-5">
           <div className="bg-yellow-500 h-[30px] w-[30px] rounded-full flex items-center justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-user-round-icon lucide-user-round"><circle cx="12" cy="8" r="5" /><path d="M20 21a8 8 0 0 0-16 0" /></svg>
           </div>
-        </div>
+        </div> */}
       </header>
 
 
@@ -56,7 +62,7 @@ export default function About() {
           <h1 className="text-5xl font-serif font-bold text-gray-900 mb-6">
             Our Story
           </h1>
-          <div className="relative h-96 w-full overflow-hidden rounded-2xl shadow-lg mb-8">
+          <div className="relative h-[550px] w-full overflow-hidden rounded-2xl shadow-lg mb-8">
             <Image
               src={discImage}
               alt="Lucille's Kitchenette"
@@ -184,6 +190,9 @@ export default function About() {
           </section>
         </div>
       </main>
+
+
+      <Footer />
     </div>
   );
 }

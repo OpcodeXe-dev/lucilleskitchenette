@@ -8,7 +8,6 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import supabase from '@/utils/Supabase';
 import { ToastContainer } from 'react-toastify';
-import Link from 'next/link';
 import 'react-toastify/dist/ReactToastify.css';
 
 
@@ -56,9 +55,6 @@ const SignUp = () => {
             const { data, error } = await supabase.auth.signUp({
                 email,
                 password,
-                // options: {
-                //     emailRedirectTo: `${location.origin}/auth/callback`,
-                // },
             });
 
             if (error) {
@@ -139,7 +135,7 @@ const SignUp = () => {
                         {loading ? 'Signing Up...' : 'Sign Up'}
                     </button>
                     <div className="my-5 w-full text-center">
-                        <p className="text-gray-600">
+                        <p>
                             Already have an account?{' '}
                             <span 
                                 className="text-blue-500 cursor-pointer hover:text-blue-600"
@@ -149,12 +145,6 @@ const SignUp = () => {
                             </span>
                         </p>
                     </div>
-                    <Link 
-                        href="/" 
-                        className="text-black-500 hover:text-gray-700 text-sm"
-                        >
-                        Back
-                    </Link>
                 </form>
             </div>
 

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Head from 'next/head';
-import Link from 'next/link';
+import Header from '../comps/Header';
 
 export default function FAQPage() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -56,6 +56,7 @@ export default function FAQPage() {
 
   return (
     <>
+    <Header />
       <Head>
         <title>FAQs - Lucille's Kitchenette</title>
         <meta name="description" content="Frequently asked questions about Lucille's Kitchenette" />
@@ -77,7 +78,6 @@ export default function FAQPage() {
                       Everything you need to know about Lucille's Kitchenette
                     </p>
                   </div>
-                  
                 </div>
               </div>
             </div>

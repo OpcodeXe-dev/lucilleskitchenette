@@ -399,7 +399,7 @@ export default function OrderPage() {
                                                         onChange={() => toggleItemSelection(groupIndex, itemIndex)}
                                                         className="mt-1 mr-3 h-4 w-4 text-yellow-500 rounded focus:ring-yellow-500 border-gray-300"
                                                     />
-                                                    <div className="flex-1 flex-col justify-between items-center">
+                                                    <div className="flex-1 flex justify-between items-center">
                                                         <div>
                                                             <h3 className="font-semibold text-gray-800">{item.name}</h3>
                                                             <p className="text-gray-500 text-sm">₱{item.price.toLocaleString()} each</p>

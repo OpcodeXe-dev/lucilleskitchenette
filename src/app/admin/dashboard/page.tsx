@@ -22,7 +22,7 @@ const AdminDashboard = () => {
     const handleLogout = () => {
         localStorage.removeItem('adminAccount');
         alert('Logged out successfully');
-        router.push('/');
+        router.push('/admin/sign-in');
     };
 
     // State for data
@@ -701,7 +701,8 @@ const AdminDashboard = () => {
             {/* Main Content */}
             <div className="lg:ml-64 p-8">
 
-            <div className="flex justify-between items-center mb-8">
+                {/* Header */}
+                <div className="flex justify-between items-center mb-8">
                     <h1 className="text-3xl font-bold text-gray-800">
                         {activeTab === 'dashboard'
                             ? 'Dashboard Overview'
@@ -727,11 +728,7 @@ const AdminDashboard = () => {
                     </div>
                 </div>
 
-
-                {/* Header */}
-                {activeTab === 'dashboard' && (
-                    <>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                     {/* Orders by Status Pie Chart */}
                     <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                         <h3 className="text-lg font-semibold text-gray-800 mb-4">Orders by Status</h3>
@@ -850,15 +847,10 @@ const AdminDashboard = () => {
                             </ResponsiveContainer>
                         </div>
                     </div>
-                    </div>
-                    </>
-                 )}
-              
-                
-                    
 
 
 
+                </div>
                 {/* Orders Table */}
                 {activeTab === 'orders' && (
                     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">

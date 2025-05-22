@@ -3,8 +3,6 @@
 import IsLoggedIn from '@/utils/IsloggedIn'
 import supabase from '@/utils/Supabase'
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation';
-
 
 
 const ResetPassword: React.FC = () => {
@@ -14,9 +12,6 @@ const ResetPassword: React.FC = () => {
   const [loadingPass, setLoadingPass] = useState(false)
   const [successText, setSuccessText] = useState('')
   const [user] = IsLoggedIn()
-
-  const router = useRouter()
-
 
   const resetPassword = async () => {
     if (loadingPass) return
@@ -52,11 +47,7 @@ const ResetPassword: React.FC = () => {
         console.error(error)
         setError(user ? 'Error resetting password' : 'You are not authenticated')
       } else {
-        setSuccessText('Password reset successfully, Redirecting to..')
-
-        setTimeout(() => {
-          router.push('/sign-in')
-        }, 2000)
+        setSuccessText('Password reset successfully')
       }
 
     } catch (error) {

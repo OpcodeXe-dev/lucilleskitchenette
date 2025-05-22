@@ -18,10 +18,11 @@ const IsLoggedIn = (): [any | null, React.Dispatch<React.SetStateAction<any | nu
         setUser(user);
       }
 
-      //checker func
-      if (!user && location.pathname.includes("/user/")) {
-        router.push('/sign-in')
-      }
+      // if (!user && location.pathname.includes("/user/")) {
+      //   router.push('/sign-in')
+      // }
+
+
     };
 
     fetchUser();
